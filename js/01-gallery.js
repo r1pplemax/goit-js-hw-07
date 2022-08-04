@@ -1,18 +1,10 @@
 import { galleryItems } from './gallery-items.js';
-// Change code below this line
-const galleryList = document.querySelector('.gallery');
-console.log(galleryList);
 
-const cardsMarkup = createCardsMarkup(galleryItems);
+const gallery = document.querySelector('.gallery');
 
-galleryList.insertAdjacentHTML('beforeend', cardsMarkup)
-
-galleryList.addEventListener("click", onOpenFullImage);
-
-
-function createCardsMarkup(galleryItems) {
-    return galleryItems.map(({ preview, original, description }) => {
-        return `<div class="gallery__item">
+function createGalleryLi(elements) {
+  return elements.map(({ preview, original, description }) => {
+    return `<div class="gallery__item">
   <a class="gallery__link" href="${original}">
     <img
       class="gallery__image"
@@ -22,32 +14,37 @@ function createCardsMarkup(galleryItems) {
     />
   </a>
 </div>`
-    }).join('');
+  }).join('')
 }
 
+const galleryList = createGalleryLi(galleryItems)
 
-function onOpenFullImage(event) {
-  event.preventDefault();
+gallery.insertAdjacentHTML("beforeend", galleryList);
+gallery.addEventListener('click', onOpenFullImage);
 
-  if (event.target.classList.contains("gallery__image")) {
-    let instanse = basicLightbox.create(
-      `<img src= ${event.target.dataset.source} width="800" height="600">`,
-      {
-        onClose: (instanse) => {
-          window.removeEventListener("keydown", onPressKeyESC);
-        },
-      }
-    );
-    instanse.src = event.target.dataset.source;
-    instanse.show();
-    window.addEventListener("keydown", onPressKeyESC, { once: true });
-    function onPressKeyESC(evt) {
-      if (evt.code === "Escape") {
-        instanse.close();
-      }
-    }
+let instance = null;
+
+function onOpenFullImage(e) {
+  e.preventDefault(); 
+  
+  const targetEl = e.target;
+  const targetValue = targetEl.dataset.source;
+
+  if (!targetValue) {
+    return
+  }
+
+instance = basicLightbox.create(`<img src="${targetValue}" width="800" height="600">`, {
+    onShow: () => window.addEventListener('keydown',closedByEscape),
+    onClose:() => window.removeEventListener('keydown',closedByEscape),
+});
+instance.show();
+}
+
+function closedByEscape(evt) {
+  if (evt.code === 'Escape') {
+    instance.close();
   }
 }
 
-console.log(cardsMarkup);
 console.log(galleryItems);
