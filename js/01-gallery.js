@@ -39,12 +39,14 @@ function onOpenFullImage(e) {
 		onShow: () => window.addEventListener('keydown', closedByEscape),
 		onClose: () => window.removeEventListener('keydown', closedByEscape),
 	});
-	instance.show();
-}
-
-function closedByEscape(evt) {
+  instance.show();
+  
+  function closedByEscape(evt) {
 	if(evt.code === 'Escape') {
 		instance.close();
 	}
 }
+}
+
+
 console.log(galleryItems);
