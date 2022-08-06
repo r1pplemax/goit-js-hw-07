@@ -28,11 +28,11 @@ gallery.addEventListener('click', onOpenFullImage);
 
 function onOpenFullImage(e) {
   let instance = null;
-  
+
 	e.preventDefault();
 	const targetEl = e.target;
 	const targetValue = targetEl.dataset.source;
-	if(!targetValue) {
+	if(targetEl.nodeName !== "IMG") {
 		return
 	}
 	instance = basicLightbox.create(`<img src="${targetValue}" width="800" height="600">`, {
